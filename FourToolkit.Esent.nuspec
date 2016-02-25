@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>FourToolkit.Esent</id>
+        <title>FourToolkit.Esent</title>
+        <version>1.1.0</version>
+        <authors>cherepets</authors>
+	<owners>cherepets</owners>
+        <projectUrl>https://github.com/cherepets/FourToolkit.Esent</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Provides managed access to ESENT database with simple API</description>
+		<iconUrl>http://i.imgur.com/U4BRggU.png</iconUrl>
+        <copyright></copyright>
+        <tags>ESENT, NoSQL, db, win10, windows, 10, linq</tags>
+    </metadata>
+    <files>
+        <file src="FourToolkit.Esent.Runtime\bin\Release\FourToolkit.Esent.dll" target="lib\netcore45"/>
+        <file src="FourToolkit.Esent.Runtime\bin\Release\Esent.Interop.Wsa.dll" target="lib\netcore45"/>
+        <file src="FourToolkit.Esent.Win32\bin\Release\FourToolkit.Esent.dll" target="lib\net40"/>
+        <file src="FourToolkit.Esent.Win32\bin\Release\Esent.Interop.dll" target="lib\net40"/>
+    </files>
+</package>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>aaeb9695-b45f-48fd-a653-e354c440f2a2</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>FourToolkit.Esent.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EsentCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentColumn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentDatabase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentIndex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentRow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentSession.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentTable_Columns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentTable_Data.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentTable_Indexes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentTransaction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DateTimeExt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ValueProcessor.cs" />
+  </ItemGroup>
+</Project>
