@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FourToolkit.Esent.Helpers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -17,10 +18,16 @@ namespace FourToolkit.Esent
             foreach (var column in table.Columns.Values)
             {
                 var prop = props.FirstOrDefault(p => p.Name == column.Name);
-                if (prop != null && column.ColumnType == prop.PropertyType)
+                if (prop == null) continue;
+                if (column.ColumnType == prop.PropertyType)
                 {
                     var value = prop.GetValue(obj);
-                    cells.Add(new EsentCell(column.Name, value));
+                    cells.Add(new EsentCell(column.Name, value, column.Encoding));
+                }
+                if (column.ColumnType == typeof(byte[]) && prop.PropertyType != typeof(byte[]))
+                {
+                    var value = ValueProcessor.GetBytes(prop.GetValue(obj) as byte[]);
+                    cells.Add(new EsentCell(column.Name, value, column.Encoding));
                 }
             }
             return cells.ToArray();
@@ -34,8 +41,11 @@ namespace FourToolkit.Esent
             foreach (var cell in r)
             {
                 var prop = props.FirstOrDefault(p => p.Name == cell.ColumnName);
-                if (prop != null && cell.Value?.GetType() == prop.PropertyType)
+                if (prop == null) continue;
+                if (cell.Value?.GetType() == prop.PropertyType)
                     prop.SetValue(obj, cell.Value);
+                if (cell.Value?.GetType() == typeof(byte[]) && prop.PropertyType != typeof(byte[]))
+                    prop.SetValue(obj, ValueProcessor.FromBytes(prop.PropertyType, cell.AsByteArray, cell.Encoding));
             }
             return obj;
         }

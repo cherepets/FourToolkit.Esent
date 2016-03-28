@@ -7,7 +7,7 @@ namespace FourToolkit.Esent.Helpers
 {
     internal static class ValueProcessor
     {
-        public static byte[] GetBytes(object data, Encoding encoding)
+        public static byte[] GetBytes(object data, Encoding encoding = null)
         {
             if (data == null) return null;
             var dataType = data.GetType();
@@ -84,7 +84,7 @@ namespace FourToolkit.Esent.Helpers
             return new byte[0];
         }
 
-        public static object FromBytes(Type dataType, byte[] bytes, Encoding encoding)
+        public static object FromBytes(Type dataType, byte[] bytes, Encoding encoding = null)
         {
             if (bytes == null || bytes.Length == 0) return GetDefault(dataType);
             if (dataType == typeof(byte[]))
