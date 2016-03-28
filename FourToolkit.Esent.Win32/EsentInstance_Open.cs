@@ -10,6 +10,8 @@ namespace FourToolkit.Esent
             {
                 Api.JetCreateInstance(out JetId, Name);
                 Api.JetSetSystemParameter(JetId, JET_SESID.Nil, JET_param.CircularLog, 1, null);
+                Api.JetSetSystemParameter(JetId, JET_SESID.Nil, JET_param.Recovery, 1, null);
+                Api.JetSetSystemParameter(JetId, JET_SESID.Nil, JET_param.CircularLog, 1, null);
                 Api.JetInit(ref JetId);
             }
             Opened = true;
