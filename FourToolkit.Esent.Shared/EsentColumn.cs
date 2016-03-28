@@ -5,7 +5,7 @@ using Microsoft.Isam.Esent.Interop;
 
 namespace FourToolkit.Esent
 {
-    public class EsentColumn
+    public partial class EsentColumn
     {
         internal JET_COLUMNDEF JetDef = new JET_COLUMNDEF();
         internal JET_COLUMNID JetId;
@@ -18,21 +18,6 @@ namespace FourToolkit.Esent
         {
             get { return JetDef.coltyp.ToClr(); }
             internal set { JetDef.coltyp = value.ToJet(); }
-        }
-
-        public Encoding Encoding
-        {
-            get
-            {
-                return Encoding.UTF8;
-            }
-            internal set
-            {
-                if (value != null)
-                    JetDef.cp = JET_CP.Unicode;
-                if (!Equals(value, Encoding.UTF8) && !Equals(value, Encoding.Unicode))
-                    throw new NotSupportedException("Not supported on WinRT");
-            }
         }
 
         public int? Max

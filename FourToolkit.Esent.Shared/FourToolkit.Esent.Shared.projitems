@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)EsentColumn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EsentDatabase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EsentIndex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EsentInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EsentRow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EsentSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EsentSession.cs" />

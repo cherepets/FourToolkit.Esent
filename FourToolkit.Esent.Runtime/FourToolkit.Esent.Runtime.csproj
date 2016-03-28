@@ -37,7 +37,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EsentInstance.cs" />
+    <Compile Include="EsentColumn_Encoding.cs" />
+    <Compile Include="EsentInstance_Open.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
