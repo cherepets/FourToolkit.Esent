@@ -18,7 +18,8 @@ namespace FourToolkit.Esent
             foreach (var column in table.Columns.Values)
             {
                 var prop = props.FirstOrDefault(p => p.Name == column.Name);
-                if (prop == null) continue;
+                if (column.Options.HasFlag(EsentColumn.Option.Autoincrement) || prop == null)
+                    continue;
                 if (column.ColumnType == prop.PropertyType)
                 {
                     var value = prop.GetValue(obj);
