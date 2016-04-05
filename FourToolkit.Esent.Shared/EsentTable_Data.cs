@@ -51,8 +51,6 @@ namespace FourToolkit.Esent
         private EsentRow RetrieveColumns(EsentCell[] columnArray)
         {
             var cells = new EsentRow();
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            // Unreadable LINQ
             foreach (var column in columnArray)
             {
                 var columnName = column.ColumnName;
@@ -83,13 +81,18 @@ namespace FourToolkit.Esent
             return Select(columns, key, keyEncoding);
         }
 
-        public List<EsentRow> SelectFirst(IEnumerable<EsentCell> columns, int count)
+        public List<EsentRow> SelectFirst(IEnumerable<EsentCell> columns, int count, int skip = 0)
         {
             CheckState();
             var columnArray = columns as EsentCell[] ?? columns.ToArray();
             if (count < 1) return null;
             var success = Api.TryMove(Database.Session.JetId, JetId, JET_Move.First, MoveGrbit.None);
             if (!success) return null;
+            for (var i = 0; i < skip; i++)
+            {
+                if (!Api.TryMove(Database.Session.JetId, JetId, JET_Move.Next, MoveGrbit.None))
+                    return null;
+            }
             var rows = new List<EsentRow>();
             for (var i = 0; i < count; i++)
             {
@@ -101,17 +104,17 @@ namespace FourToolkit.Esent
             return rows;
         }
 
-        public List<EsentCell> SelectFirst(string columnName, int count) =>
-            SelectFirst(new[] { new EsentCell(columnName) }, count)
+        public List<EsentCell> SelectFirst(string columnName, int count, int skip = 0) =>
+            SelectFirst(new[] { new EsentCell(columnName) }, count, skip)
                 ?.Select(r => r.First())
                 .ToList();
 
 
-        public List<EsentRow> SelectFirstRows(int count)
+        public List<EsentRow> SelectFirstRows(int count, int skip = 0)
         {
             CheckState();
             var columns = Columns.Select(c => new EsentCell(c.Value.Name, null, c.Value.Encoding));
-            return SelectFirst(columns, count);
+            return SelectFirst(columns, count, skip);
         }
 
         public EsentRow SelectFirstRow() => SelectFirstRows(1)?.FirstOrDefault();
