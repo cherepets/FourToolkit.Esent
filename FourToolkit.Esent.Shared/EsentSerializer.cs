@@ -27,7 +27,7 @@ namespace FourToolkit.Esent
                 }
                 if (column.ColumnType == typeof(byte[]) && prop.PropertyType != typeof(byte[]))
                 {
-                    var value = ValueProcessor.GetBytes(prop.GetValue(obj) as byte[]);
+                    var value = ValueProcessor.GetBytes(prop.GetValue(obj));
                     cells.Add(new EsentCell(column.Name, value, column.Encoding));
                 }
             }
