@@ -62,14 +62,14 @@ namespace FourToolkit.Esent
             }
             return cells;
         }
-        
+
         public EsentRow Select(IEnumerable<EsentCell> columns, object key, Encoding keyEncoding = null)
         {
             CheckState();
             var columnArray = columns as EsentCell[] ?? columns.ToArray();
             var byteKey = ValueProcessor.GetBytes(key, keyEncoding);
             Api.MakeKey(Database.Session.JetId, JetId, byteKey, MakeKeyGrbit.NewKey);
-            var success = Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ); 
+            var success = Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ);
             if (!success) return null;
             return RetrieveColumns(columnArray);
         }
@@ -190,30 +190,45 @@ namespace FourToolkit.Esent
         public int Update(Func<EsentRow, bool> predicate, string columnName, object value)
             => Update(predicate, null, columnName, value);
 
-        public void Update(object key, Encoding keyEncoding = null, params EsentCell[] columns)
+        public bool Update(object key, Encoding keyEncoding = null, params EsentCell[] columns)
         {
             CheckState();
             var byteKey = ValueProcessor.GetBytes(key, keyEncoding);
             Api.MakeKey(Database.Session.JetId, JetId, byteKey, MakeKeyGrbit.NewKey);
-            while (Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ))
+            var success = Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ);
+            if (!success) return false;
+            Api.JetPrepareUpdate(Database.Session.JetId, JetId, JET_prep.Replace);
+            foreach (var column in columns)
             {
-                Api.JetPrepareUpdate(Database.Session.JetId, JetId, JET_prep.Replace);
-                foreach (var column in columns)
-                {
-                    var encoding = column.Encoding ?? Columns[column.ColumnName].Encoding;
-                    var value = ValueProcessor.GetBytes(column.Value, encoding);
-                    if (value != null)
-                        Api.SetColumn(Database.Session.JetId, JetId, Columns[column.ColumnName].JetId, value);
-                }
-                Api.JetUpdate(Database.Session.JetId, JetId);
+                var encoding = column.Encoding ?? Columns[column.ColumnName].Encoding;
+                var value = ValueProcessor.GetBytes(column.Value, encoding);
+                if (value != null)
+                    Api.SetColumn(Database.Session.JetId, JetId, Columns[column.ColumnName].JetId, value);
             }
+            Api.JetUpdate(Database.Session.JetId, JetId);
+            return true;
         }
 
-        public void Update(object key, Encoding keyEncoding, string columnName, object value)
+        public void UpdateAll(object key, Encoding keyEncoding = null, params EsentCell[] columns)
+        {
+            while (Update(key, keyEncoding, columns)) { }
+        }
+
+        public bool Update(object key, Encoding keyEncoding, string columnName, object value)
             => Update(key, keyEncoding, new EsentCell(columnName, value));
 
-        public void Update(object key, string columnName, object value)
+        public void UpdateAll(object key, Encoding keyEncoding, string columnName, object value)
+        {
+            while (Update(key, keyEncoding, columnName, value)) { }
+        }
+
+        public bool Update(object key, string columnName, object value)
             => Update(key, null, columnName, value);
+        
+        public void UpdateAll(object key, string columnName, object value)
+        {
+            while (Update(key, columnName, value)) { }
+        }
         #endregion
 
         #region Delete
@@ -241,13 +256,20 @@ namespace FourToolkit.Esent
             return count;
         }
 
-        public void Delete(object key, Encoding keyEncoding = null)
+        public bool Delete(object key, Encoding keyEncoding = null)
         {
             CheckState();
             var byteKey = ValueProcessor.GetBytes(key, keyEncoding);
             Api.MakeKey(Database.Session.JetId, JetId, byteKey, MakeKeyGrbit.NewKey);
-            while (Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ))
-                Api.JetDelete(Database.Session.JetId, JetId);
+            var success = Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ);
+            if (!success) return false;
+            Api.JetDelete(Database.Session.JetId, JetId);
+            return true;
+        }
+
+        public void DeleteAll(object key, Encoding keyEncoding = null)
+        {
+            while (Delete(key, keyEncoding)) { }
         }
         #endregion
 
