@@ -195,17 +195,18 @@ namespace FourToolkit.Esent
             CheckState();
             var byteKey = ValueProcessor.GetBytes(key, keyEncoding);
             Api.MakeKey(Database.Session.JetId, JetId, byteKey, MakeKeyGrbit.NewKey);
-            var success = Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ);
-            if (!success) return;
-            Api.JetPrepareUpdate(Database.Session.JetId, JetId, JET_prep.Replace);
-            foreach (var column in columns)
+            while (Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ))
             {
-                var encoding = column.Encoding ?? Columns[column.ColumnName].Encoding;
-                var value = ValueProcessor.GetBytes(column.Value, encoding);
-                if (value != null)
-                    Api.SetColumn(Database.Session.JetId, JetId, Columns[column.ColumnName].JetId, value);
+                Api.JetPrepareUpdate(Database.Session.JetId, JetId, JET_prep.Replace);
+                foreach (var column in columns)
+                {
+                    var encoding = column.Encoding ?? Columns[column.ColumnName].Encoding;
+                    var value = ValueProcessor.GetBytes(column.Value, encoding);
+                    if (value != null)
+                        Api.SetColumn(Database.Session.JetId, JetId, Columns[column.ColumnName].JetId, value);
+                }
+                Api.JetUpdate(Database.Session.JetId, JetId);
             }
-            Api.JetUpdate(Database.Session.JetId, JetId);
         }
 
         public void Update(object key, Encoding keyEncoding, string columnName, object value)
@@ -245,9 +246,8 @@ namespace FourToolkit.Esent
             CheckState();
             var byteKey = ValueProcessor.GetBytes(key, keyEncoding);
             Api.MakeKey(Database.Session.JetId, JetId, byteKey, MakeKeyGrbit.NewKey);
-            var success = Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ);
-            if (!success) return;
-            Api.JetDelete(Database.Session.JetId, JetId);
+            while (Api.TrySeek(Database.Session.JetId, JetId, SeekGrbit.SeekEQ))
+                Api.JetDelete(Database.Session.JetId, JetId);
         }
         #endregion
 
