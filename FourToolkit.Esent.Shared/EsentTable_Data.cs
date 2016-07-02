@@ -289,7 +289,7 @@ namespace FourToolkit.Esent
             {
                 var cells = RetrieveColumns(columnArray);
                 if (predicate(cells)) rows.Add(cells);
-                if (exitCondition?.Invoke(cells) ?? false)
+                if (row.Any() && exitCondition?.Invoke(cells) ?? false)
                     break;
                 if (!Api.TryMove(Database.Session.JetId, JetId, JET_Move.Next, MoveGrbit.None))
                     break;
