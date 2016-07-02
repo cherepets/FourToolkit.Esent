@@ -274,7 +274,10 @@ namespace FourToolkit.Esent
         #endregion
 
         #region Where
-        public List<EsentRow> Where(Func<EsentRow, bool> predicate)
+        public List<EsentRow> While(Func<EsentRow, bool> predicate)
+            => Where(predicate, r => !predicate.Invoke(r));
+
+        public List<EsentRow> Where(Func<EsentRow, bool> predicate, Func<EsentRow, bool> exitCondition = null)
         {
             CheckState();
             var columns = Columns.Select(c => new EsentCell(c.Value.Name, null, c.Value.Encoding));
@@ -286,6 +289,8 @@ namespace FourToolkit.Esent
             {
                 var cells = RetrieveColumns(columnArray);
                 if (predicate(cells)) rows.Add(cells);
+                if (exitCondition?.Invoke(cells) ?? false)
+                    break;
                 if (!Api.TryMove(Database.Session.JetId, JetId, JET_Move.Next, MoveGrbit.None))
                     break;
             }
